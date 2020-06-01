@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
-	"path"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 )
@@ -98,7 +98,7 @@ type Folder struct {
 }
 
 func (c *Client) GetDashboard(ctx context.Context, uid string) (dashboard map[string]interface{}, err error) {
-	req, err := http.NewRequest("GET", c.cfg.Address+path.Join(DashboardByUid, uid), nil)
+	req, err := http.NewRequest("GET", c.cfg.Address+filepath.Join(DashboardByUid, uid), nil)
 	if err != nil {
 		err = errors.Wrapf(err,
 			"couldn't prepare request")

@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"os"
-	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/cirocosta/grafana-sync/grafana"
 	"github.com/pkg/errors"
@@ -30,7 +31,7 @@ func (p *pullCommand) Execute(args []string) (err error) {
 
 	var dashboard map[string]interface{}
 	for _, ref := range refs {
-		dashboardFolderInFs := path.Join(string(config.Directory), ref.Folder)
+		dashboardFolderInFs := filepath.Join(string(config.Directory), ref.Folder)
 
 		err = eventuallyCreateDirectory(dashboardFolderInFs)
 		if err != nil {
@@ -42,7 +43,7 @@ func (p *pullCommand) Execute(args []string) (err error) {
 			return
 		}
 
-		err = grafana.SaveToDisk(path.Join(dashboardFolderInFs, ref.Title)+".json", dashboard)
+		err = grafana.SaveToDisk(filepath.Join(dashboardFolderInFs, strings.ReplaceAll(ref.Title+".json", "/", "|")), dashboard)
 		if err != nil {
 			return
 		}
